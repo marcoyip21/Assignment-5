@@ -1,0 +1,48 @@
+---
+title: "Regex"
+author: "Marco Yip"
+date: "Feb 8th 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading libraries
+```{r}
+library(dplyr)
+```
+
+# 1. Importing the data 
+```{r}
+setwd("/Users/marcoyip/Desktop/BIOL 432")
+MData=read.csv("measurements.csv")
+MData=MData %>% 
+  dplyr::select(-c(1))
+
+head(MData)
+```
+
+# 2. Adding a new column into the new dataset called ``Sp`` 
+```{r}
+DataSp = MData %>%
+  mutate(Sp = sub("(\\w)\\w+", "\\1.", MData$Species))
+head(DataSp)
+```
+
+# 3. Creating a new dataset with ``Sp`` column instead of ``species`` column 
+```{r}
+MDataFinal = DataSp %>%
+  relocate(Sp, .before="Limb_width") %>%
+   dplyr::select(-c(1))
+
+
+head(MDataFinal)
+```
+
+# 4. Saving the new dataset
+```{r}
+write.csv(MDataFinal, "MeasShort.csv")
+```
+
